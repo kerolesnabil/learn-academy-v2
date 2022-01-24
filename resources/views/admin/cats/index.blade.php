@@ -21,7 +21,7 @@
                     <th scope="row">{{$loop->iteration}} </th>
                     <td>{{$cat->name}}</td>
                         <td>
-                            <a  class="btn btn-sm btn-info" href="{{route('admin.cats.edit', $cat->id)}}" >Edit</a>
+                            <a  class="btn btn-sm btn-info" href="{{route('admin.cats.create', $cat->id)}}" >Edit</a>
                             <a class="btn btn-sm btn-danger" href="{{route('admin.cats.delete' , $cat->id)}}" >Delete</a>
                         </td>
                 </tr>

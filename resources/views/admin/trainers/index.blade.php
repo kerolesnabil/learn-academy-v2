@@ -33,7 +33,7 @@
                     </td>
                     <td>{{$trainer->spec}}</td>
                         <td>
-                            <a  class="btn btn-sm btn-info" href="{{route('admin.trainers.edit', $trainer->id)}}" >Edit</a>
+                            <a  class="btn btn-sm btn-info" href="{{route('admin.trainers.create', $trainer->id)}}" >Edit</a>
                             <a class="btn btn-sm btn-danger" href="{{route('admin.trainers.delete' , $trainer->id)}}" >Delete</a>
                         </td>
                 </tr>

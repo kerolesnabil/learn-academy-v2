@@ -22,11 +22,18 @@ class CourseController extends Controller
         return view('admin.courses.index')->with($data);
     }
 
-    public function create()
+    public function create($id=null)
     {
         $data['cats']=Cat::select('id','name')->get();
         $data['trainers']=Trainer::select('id','name')->get();
+
+        if($id!=null)
+        {
+            $data['course']=Course::findOrFail($id);
+
+        }
         return view('admin.courses.create')->with($data);
+
     }
 
     public function store(Request $request)
@@ -38,54 +45,44 @@ class CourseController extends Controller
             'price'=>'required|integer',
             'cat_id'=>'required|exists:cats,id',
             'trainer_id'=>'required|exists:trainers,id',
-            'img'=>'required|image|mimes:jpg,jpeg,png'
-        ]);
-        $new_name=$data['img']->hashName();
-
-        Image::make($data['img'])->resize(970,520)->save(public_path('uploads/courses/'.$new_name));
-        $data['img']=$new_name;
-        Course::create($data);
-
-        return redirect(route('admin.courses.index'));
-
-    }
-
-    public function edit($id)
-    {
-        $data['cats']=Cat::select('id','name')->get();
-        $data['trainers']=Trainer::select('id','name')->get();
-        $data['course']=Course::findOrFail($id);
-        return view('admin.courses.edit')->with($data);
-    }
-
-    public function update(Request $request)
-    {
-        $data=$request->validate([
-            'name'=>'required|string',
-            'small_desc'=>'required|string',
-            'desc'=>'required|string',
-            'price'=>'required|integer',
-            'cat_id'=>'required|exists:cats,id',
-            'trainer_id'=>'required|exists:trainers,id',
-            'img'=>'nullable|image|mimes:jpg,jpeg,png'
         ]);
 
-        $old_name=Course::findOrFail($request->id)->img;
-        if($request->hasFile('img'))
+        if($request->id!=null)
         {
+            $data+=$request->validate([
+                'img'=>'nullable|image|mimes:jpg,jpeg,png'
+            ]);
 
-            Storage::disk('uploads')->delete('courses/'.$old_name);
+            $old_name=Course::findOrFail($request->id)->img;
+            if($request->hasFile('img'))
+            {
+
+                Storage::disk('uploads')->delete('courses/'.$old_name);
+                $new_name=$data['img']->hashName();
+                Image::make($data['img'])->resize(970,520)->save(public_path('uploads/courses/'.$new_name));
+                $data['img']=$new_name;
+
+            }
+            else{
+                $data['img']=$old_name;
+            }
+
+            Course::findOrFail($request->id)->update($data);
+            return back();
+        }
+        else{
+            $data+=$request->validate([
+                'img'=>'required|image|mimes:jpg,jpeg,png'
+            ]);
             $new_name=$data['img']->hashName();
             Image::make($data['img'])->resize(970,520)->save(public_path('uploads/courses/'.$new_name));
             $data['img']=$new_name;
-
-        }
-        else{
-            $data['img']=$old_name;
+            Course::create($data);
         }
 
-        Course::findOrFail($request->id)->update($data);
-        return back();
+
+        return redirect(route('admin.courses.index'));
+
     }
 
     public function delete($id)

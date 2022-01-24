@@ -25,8 +25,8 @@
                     <td>{{$course->name}}</td>
                     <td>{{$course->price}}</td>
                     <td>
-                        <a  class="btn btn-sm btn-info" href="{{route('admin.courses.edit', $course->id)}}" >Edit</a>
-                        <a class="btn btn-sm btn-danger" href="{{route('admin.courses.delete' , $course->id)}}" >Delete</a>
+                        <a class="btn btn-sm btn-info" href="{{route('admin.courses.create',$course->id)}}" >Edit</a>
+                        <a class="btn btn-sm btn-danger" href="{{route('admin.courses.delete',$course->id)}}" >Delete</a>
                     </td>
                 </tr>
             @endforeach
