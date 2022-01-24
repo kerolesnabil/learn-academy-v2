@@ -1,6 +1,52 @@
 
 @extends('front.layout')
 
+
+@section('script')
+    <script type="text/javascript" >
+        $(document).on('click','#btn_course_ajax',function () {
+
+            var form=$('#course_ajax').serialize();
+            var url=$('#course_ajax').attr('action');
+
+
+            $.ajax({
+                url:url,
+                datatype:'json',
+                data:form,
+                type:'post',
+                beforeSend:function () {
+                    $('#message_course').empty();
+                },success:function (data) {
+                    if(data.status===true)
+                    {
+                        $('#message_course').html(
+                            '<ul onclick="this.remove()" class="list-unstyled alert alert-info"><li>'
+                            +'data added successfully'+
+                            '</li></ul>'
+                        );
+                        $('#course_ajax')[0].reset();
+                    }
+
+                },error:function (data_error,exception) {
+                    if(exception==='error')
+                    {
+                        var error_list='';
+                        $.each(data_error.responseJSON.errors,function (index,v) {
+                            error_list+='<li>'+v+'</li>';
+                        });
+                        $('#message_course').append('<ul onclick="this.remove()" class="list-unstyled alert alert-danger">'+error_list+'</ul>');
+                    }
+                }
+
+            });
+
+            return false;
+        })
+    </script>
+@endsection
+
+
 @section('content')
 
 <section class="breadcrumb breadcrumb_bg">
@@ -49,9 +95,9 @@
                 </div>
 
                 <div class="my-5" >
-                    @include('front.inc.errors')
+                    <div id="message_course"></div>
 
-                    <form class="form-contact contact_form" action="{{route('front.message.enroll')}}" method="post" id="contactForm">
+                    <form id="course_ajax" class="form-contact contact_form" action="{{route('front.message.enroll')}}" method="post" id="contactForm">
                         {!! csrf_field() !!}
                         <div class="row">
 
@@ -74,7 +120,7 @@
                             </div>
                         </div>
                         <div class="form-group mt-3">
-                            <button type="submit" class="button button-contactForm btn_1">Enroll</button>
+                            <button id="btn_course_ajax" type="submit" class="button button-contactForm btn_1">Enroll</button>
                         </div>
                     </form>
 

@@ -24,6 +24,47 @@
     <link rel="stylesheet" href="{{asset('front/css')}}/slick.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="{{asset('front/css')}}/style.css">
+    <script src="{{asset('front/js')}}/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" >
+        $(document).on('click','#btnNewsletter',function () {
+
+            var form=$('#Newsletter').serialize();
+            var url=$('#Newsletter').attr('action');
+            $.ajax({
+                url:url,
+                datatype:'json',
+                data:form,
+                type:'post',
+                beforeSend:function () {
+                    $('#message_newsletter').empty();
+                },success:function (data) {
+                    if(data.status===true)
+                    {
+                        $('#message_newsletter').html(
+                            '<ul onclick="this.remove()" class="list-unstyled alert alert-info"><li>'
+                            +'Email added successfully'+
+                            '</li></ul>'
+                            );
+                        $('#Newsletter')[0].reset();
+                    }
+
+                },error:function (data_error,exception) {
+                    if(exception==='error')
+                    {
+                        var error_list='';
+                        $.each(data_error.responseJSON.errors,function (index,v) {
+                            error_list+='<li>'+v+'</li>';
+                        });
+                        $('#message_newsletter').html('<ul onclick="this.remove()" class="list-unstyled alert alert-danger">'+error_list+'</ul>');
+                    }
+                }
+
+            });
+
+            return false;
+        })
+    </script>
+    @yield('script')
     @yield('style')
 </head>
 
@@ -48,7 +89,7 @@
                                 <a class="nav-link" href="{{route('front.homepage')}}">Home</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="blog.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Courses
                                 </a>
                                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -63,7 +104,7 @@
                                 <a class="nav-link" href="{{route('front.contact')}}">Contact</a>
                             </li>
                             <li class="d-none d-lg-block">
-                                <a class="btn_1" href="#">Get a Quote</a>
+                                <a class="btn_1" href="{{asset('/dashboard')}}">Login Admin</a>
                             </li>
                         </ul>
                     </div>

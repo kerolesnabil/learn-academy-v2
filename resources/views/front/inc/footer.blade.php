@@ -16,17 +16,18 @@
                     <h4>Newsletter</h4>
                     <p>Stay updated with our latest trends Seed heaven so said place winged over given forth fruit.
                     </p>
-                    @include('front.inc.errors')
-                    <form action="{{route('front.message.newsletter')}}" method="post"  >
+                    <div id="message_newsletter" onchange="function f() {
+                                this.removeAttr();
+                        }" ></div>
+                    <form id="Newsletter" action="{{route('front.message.newsletter')}}" method="post"  >
                         {!! csrf_field() !!}
-
                         <div class="form-group">
                             <div class="input-group mb-3">
-                                <input type="email" name="email" class="form-control" placeholder='Enter email address'
+                                <input type="email" name="email"  class="form-control" placeholder='Enter email address'
                                        onfocus="this.placeholder = ''"
                                        onblur="this.placeholder = 'Enter email address'">
                                 <div class="input-group-append">
-                                    <button class="btn btn_1" type="submit"><i class="ti-angle-right"></i></button>
+                                    <button class="btn btn_1" id="btnNewsletter" type="submit"><i class="ti-angle-right"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +93,7 @@
 <!-- custom js -->
 <script src="{{asset('front/js')}}/custom.js"></script>
 
-@yield('script')
+
 
 </body>
 

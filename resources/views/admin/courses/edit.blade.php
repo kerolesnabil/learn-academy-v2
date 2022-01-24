@@ -11,6 +11,7 @@
         {{csrf_field()}}
         <input type="hidden" name="id" value="{{$course->id}}" >
         <div class="form-group">
+
             <select class="form-control" name="cat_id">
                 @foreach($cats as $cat)
                     <option value="{{$cat->id}}" @if($course->cat_id==$cat->id) selected @endif>{{$cat->name}}</option>

@@ -8,10 +8,53 @@
         }
     </style>
 @endsection
+@section('script')
+    <script type="text/javascript" >
+        $(document).on('click','#btn_contact_ajax',function () {
+
+            var form=$('#contact_ajax').serialize();
+            var url=$('#contact_ajax').attr('action');
+
+            $.ajax({
+                url:url,
+                datatype:'json',
+                data:form,
+                type:'post',
+                beforeSend:function () {
+                    $('#message_contact').empty();
+                },success:function (data) {
+                    if(data.status===true)
+                    {
+                        $('#message_contact').html(
+                            '<ul onclick="this.remove()" class="list-unstyled alert alert-info"><li>'
+                            +'data added successfully'+
+                            '</li></ul>'
+                        );
+                        $('#contact_ajax')[0].reset();
+                    }
+
+                },error:function (data_error,exception) {
+                    if(exception==='error')
+                    {
+                        var error_list='';
+                        $.each(data_error.responseJSON.errors,function (index,v) {
+                            error_list+='<li>'+v+'</li>';
+                        });
+                        $('#message_contact').append('<ul onclick="this.remove()"" class="list-unstyled alert alert-danger">'+error_list+'</ul>');
+                    }
+                }
+
+            });
+
+
+            return false;
+        })
+    </script>
+@endsection
+
+
 
 @section('content')
-
-
     <section class="breadcrumb breadcrumb_bg">
         <div class="container">
             <div class="row">
@@ -40,9 +83,9 @@
                 </div>
                 <div class="col-lg-8">
 
-                    @include('front.inc.errors')
+                    <div id="message_contact"></div>
 
-                    <form class="form-contact contact_form" action="{{route('front.message.contact')}}" method="post" id="contactForm">
+                    <form id="contact_ajax" class="form-contact contact_form" action="{{route('front.message.contact')}}" method="post" id="contactForm">
                         {!! csrf_field() !!}
                         <div class="row">
                             <div class="col-12">
@@ -67,7 +110,7 @@
                             </div>
                         </div>
                         <div class="form-group mt-3">
-                            <button type="submit" class="button button-contactForm btn_1">Send Message</button>
+                            <button id="btn_contact_ajax" type="submit" class="button button-contactForm btn_1">Send Message</button>
                         </div>
                     </form>
                 </div>

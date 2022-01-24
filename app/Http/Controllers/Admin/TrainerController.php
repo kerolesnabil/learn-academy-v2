@@ -83,5 +83,12 @@ class TrainerController extends Controller
         Trainer::findOrFail($id)->delete();
 
         return back();
+
+
+
     }
+
+
+
+
 }
